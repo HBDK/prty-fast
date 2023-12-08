@@ -61,6 +61,36 @@ To use prty-fast, follow these steps:
 
 **Note: Any changes made to the templates will require a restart of the prty-fast service for the changes to take effect.**
 
+## Running with Docker
+
+To run this application using Docker, you have two options:
+
+1. Using the `docker run` command:
+    ```bash
+    docker run -d \
+         -e NTFY_ADDRESS=https://your-notification-service.com \
+         -e "INCLUDE_TEMPLATES=grafana;slack" \
+         -e DRY_RUN=false \
+         -p 8000:8000 \
+         -v <host folder with custom templates>:/app/templates \
+         ghcr.io/hbdk/prty-fast
+    ```
+
+2. Using Docker Compose:
+    ```yaml
+    version: '3.8'
+    services:
+       prty-fast:
+          image: ghcr.io/hbdk/prty-fast
+          environment:
+             NTFY_ADDRESS: https://your-notification-service.com
+             INCLUDE_TEMPLATES: grafana;slack
+             DRY_RUN: false
+          ports:
+             - "8000:8000"
+          volumes:
+             - <host folder with custom templates>:/app/templates # Optional
+    ```
 ## Metrics
 
 prty-fast uses Prometheus FastAPI Instrumentator for metrics. Metrics are exposed at `/metrics`.
