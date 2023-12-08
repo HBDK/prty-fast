@@ -39,6 +39,7 @@ def load_templates():
 
     # Load templates from the 'defaults' folder based on the INCLUDE_TEMPLATES configuration
     include_templates = config("INCLUDE_TEMPLATES", default="", cast=str).split(";")
+    include_templates = [template for template in include_templates if template]
 
     for template_name in include_templates:
         template_path = os.path.join("defaults", f"{template_name}.j2")
