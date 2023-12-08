@@ -49,5 +49,6 @@ jobs:
           platforms: ${{env.platforms}}
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}:${{ steps.event_name.outputs.event_name }}
-            ghcr.io/${{ github.repository }}:${{ steps.latest_tag.outputs.latest_tag }}
+            ghcr.io/${{ github.repository | lower }}:${{ steps.event_name.outputs.event_name }}
+            ghcr.io/${{ github.repository | lower }}:${{ steps.latest_tag.outputs.latest_tag }}
+
