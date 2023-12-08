@@ -91,6 +91,19 @@ To run this application using Docker, you have two options:
           volumes:
              - <host folder with custom templates>:/app/templates # Optional
     ```
+
+## Testing
+
+In the `example requests` folder, there are some curl snippets available for testing the built-in templates.
+
+To run these snippets, navigate to the folder and execute them as follows:
+
+```bash
+sh sonarr.sh
+```
+
+Alternatively, you can import these code snippets into Postman or Insomnia for testing purposes.
+
 ## Metrics
 
 prty-fast uses Prometheus FastAPI Instrumentator for metrics. Metrics are exposed at `/metrics`.

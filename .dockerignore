@@ -22,5 +22,8 @@ ENV/
 *.sqlite
 *.db
 
-
+.env
 README.md
+
+# Exclude everything in the "example requests" folder
+example\ requests/*
