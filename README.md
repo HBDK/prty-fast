@@ -10,10 +10,10 @@ prty-fast allows you to define message templates using Jinja2 syntax and send no
 
 ## Features
 
-- **Template-based Notifications:** Define message templates using Jinja2 syntax.
-- **Configurability:** Easily configure the service through a JSON configuration file.
-- **Notification Channels:** Create endpoints for different notification channels based on your templates.
-- **Dry Run Mode:** Test notifications without actually sending requests to the notification endpoint.
+- **Template-based Transformations:** Define message templates using Jinja2 syntax.
+- **Configurability:** Easily configure the service through environment variables or a .env file.
+- **Notification Channels:** Automatically create endpoints for notification channels based on your templates.
+- **Your Way or Who Cares:** Use built-in templates or add your own.
 
 ## Requirements
 
@@ -26,15 +26,13 @@ prty-fast allows you to define message templates using Jinja2 syntax and send no
 
 ## Configuration
 
-Create a `config.json` file with the following structure:
+To overwrite configurations, either create environment variables or create a `.env` file with the following structure in the project folder:
 
-```json
-{
-  "NTFY_ADDRESS": "https://your-notification-service.com",
-  "TEMPLATES_FOLDER": "templates",
-  "INCLUDE_TEMPLATES": "grafana;slack",
-  "DRY_RUN": false
-}
+```
+NTFY_ADDRESS=https://your-notification-service.com
+TEMPLATES_FOLDER=templates
+INCLUDE_TEMPLATES=grafana;slack
+DRY_RUN=false
 ```
 
 ## Installation
@@ -55,8 +53,13 @@ Create a `config.json` file with the following structure:
 
 ## Usage
 
-- Create Jinja2 templates in the specified `TEMPLATES_FOLDER`.
-- Use different endpoints for various notification channels based on template names.
+To use prty-fast, follow these steps:
+
+1. Specify the built-in templates you want to use by listing them in the `INCLUDE_TEMPLATES` environment variable, separated by semicolons.
+2. If you need additional custom templates, create them in the designated `TEMPLATES_FOLDER`.
+3. Access different endpoints for various notification channels based on the template names. For example, if you have a template called `sonarr.j2` in the templates folder, an endpoint `/sonarr` will be created. Any message sent to that endpoint will be transformed and forwarded to the `ntfy` service under the topic `sonarr`. The same applies to built-in templates like `grafana`. Messages sent to `/grafana` will be transformed and passed through to the `grafana` topic.
+
+**Note: Any changes made to the templates will require a restart of the prty-fast service for the changes to take effect.**
 
 ## Metrics
 
@@ -64,7 +67,7 @@ prty-fast uses Prometheus FastAPI Instrumentator for metrics. Metrics are expose
 
 ## HTML Page
 
-Access the root endpoint (`/`) to view a simple HTML page displaying project information, loaded templates, and the NTFY_ADDRESS.
+To view a simple HTML page that shows project information, loaded templates, and the address and availability of the ntfy service, access the root endpoint (`/`).
 
 ## Contributing
 

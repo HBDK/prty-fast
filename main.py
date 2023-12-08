@@ -6,17 +6,11 @@ from jinja2 import Template
 import httpx
 from decouple import config
 import logging
-import sys
 from prometheus_fastapi_instrumentator import Instrumentator, metrics
 
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
-
-# Load configuration from file if provided as a command-line argument
-config_file_path = os.environ.get("CONFIG_FILE_PATH", "config.json")
-if os.path.exists(config_file_path):
-    config.read(config_file_path)
 
 PROJECT_NAME = "prty-fast"
 HEALTHCHECK_PATH = "/v1/health"
