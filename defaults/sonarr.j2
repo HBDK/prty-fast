@@ -1,0 +1,4 @@
+{
+  "title": "{{ message.eventType }}: {{ message.series.title }}",
+  "body": "{% for episode in message.episodes %} {{ episode.seasonNumber }}x{{ episode.episodeNumber }} {{ episode.title }}{% if not loop.last %}\n{% endif %}{% endfor %}"
+}
