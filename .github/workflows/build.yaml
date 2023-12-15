@@ -2,9 +2,9 @@
 name: build
 
 on:
-  workflow_dispatch:
-  release:
-    types: [published]
+  push:
+    branches:
+      - 'main'
 
 env:
   platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64 #linux/arm/v6
@@ -30,12 +30,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: store event_name tag
-        id: event_name
-        run: |
-          tag_name=$(cat $GITHUB_EVENT_PATH | grep tag_name | sed -E 's/.*"([^"]+)".*/\1/')
-          echo ::set-output name=event_name::$([[ ! -z "$tag_name" ]] && echo $tag_name || echo "manual")
-
       - name: store latest_tag tag
         id: latest_tag
         run: |
@@ -50,6 +44,5 @@ jobs:
           platforms: ${{env.platforms}}
           push: true
           tags: |
-            ghcr.io/${{ env.repo }}:${{ steps.event_name.outputs.event_name }}
             ghcr.io/${{ env.repo }}:${{ steps.latest_tag.outputs.latest_tag }}
 
