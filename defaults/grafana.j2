@@ -1,5 +1,5 @@
 {
-  "title": "{{ message.commonLabels.alertname }}",
-  "body": "{{ message.commonAnnotations.summary }}",
+  "title": "{{ message.title }}",
+  "body": "{{ message.message | safe | replace('\n', '\\n') }}",
   "tags": "{% for key, value in message.commonLabels.items() %}{{ key }}={{ value }}{% if not loop.last %},{% endif %}{% endfor %}"
 }
