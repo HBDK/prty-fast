@@ -2,11 +2,11 @@
 
 **Note: I am not a Python programmer, and this program is primarily AI-generated. The program should never be exposed publicly, and running it is entirely at your own risk. Use caution and discretion when handling sensitive information.**
 
-prty-fast is a FastAPI-based service for sending notifications using configurable templates.
+prty-fast is a FastAPI-based service that transforms JSON webhooks into ntfy notifications using configurable Jinja2 templates.
 
 ## Introduction
 
-prty-fast allows you to define message templates using Jinja2 syntax and send notifications using those templates. The service is intended for internal use and should not be exposed to the public internet.
+prty-fast allows you to define message templates using Jinja2 syntax and send them to ntfy for notifications. The service is intended for internal use and should not be exposed publicly.
 
 ## Features
 
