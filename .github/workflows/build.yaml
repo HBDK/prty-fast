@@ -38,7 +38,11 @@ jobs:
           echo ::set-output name=latest_tag::$([[ ! -z "$tag_name" ]] && echo "latest" || echo "dev")
 
       - name: print ref
-        run: echo "${{github.ref}} - ${{toJson(github.event)}}"
+        run: |
+          ref=${{github.ref}}
+          branch_name=$(echo ${ref##*/} | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9_.-]//g')
+          echo $branch_name
+          echo "${{github.ref}} - ${{toJson(github.event)}}"
 
       - name: Build and push
         uses: docker/build-push-action@v5
