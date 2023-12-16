@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - 'main'
+  pull_request:
+    branches:
+      - main
 
 env:
   platforms: linux/386,linux/amd64,linux/arm/v7,linux/arm64 #linux/arm/v6
@@ -16,34 +19,44 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
+        uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: store latest_tag tag
-        id: latest_tag
+      - name: get tags
         run: |
-          tag_name=$(cat $GITHUB_EVENT_PATH | grep tag_name | sed -E 's/.*"([^"]+)".*/\1/')
-          echo ::set-output name=latest_tag::$([[ ! -z "$tag_name" ]] && echo "latest" || echo "dev")
+          ref=${{github.ref}}
+          branch_name=$(echo ${ref##*/} | sed 's/[^a-z0-9_.-]//g' | cut -c 1-128)
+          if [[ $branch_name == "main" ]]; then
+            latest_tag="latest"
+          else
+            latest_tag="dev"
+          fi
+          echo $branch_name
+          echo $latest_tag
+          echo "BRANCH_TAG=$branch_name" >> $GITHUB_ENV
+          echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
 
       - name: Build and push
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v5
         with:
           context: .
           file: ./Dockerfile
           platforms: ${{env.platforms}}
-          push: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ghcr.io/${{ env.repo }}:${{ steps.latest_tag.outputs.latest_tag }}
+            ghcr.io/${{ env.repo }}:${{ env.BRANCH_TAG }}
+            ghcr.io/${{ env.repo }}:${{ env.LATEST_TAG }}
 
