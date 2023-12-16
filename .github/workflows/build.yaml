@@ -31,18 +31,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: store latest_tag tag
-        id: latest_tag
-        run: |
-          tag_name=$(cat $GITHUB_EVENT_PATH | grep tag_name | sed -E 's/.*"([^"]+)".*/\1/')
-          echo ::set-output name=latest_tag::$([[ ! -z "$tag_name" ]] && echo "latest" || echo "dev")
-
-      - name: print ref
+      - name: get tags
         run: |
           ref=${{github.ref}}
-          branch_name=$(echo ${ref##*/} | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9_.-]//g')
+          branch_name=$(echo ${ref##*/} | sed 's/[^a-z0-9_.-]//g' | cut -c 1-128)
           echo $branch_name
-          echo "${{github.ref}} - ${{toJson(github.event)}}"
+          if [[ $branch_name == "main" ]]; then
+            latest_tag="latest"
+          else
+            latest_tag="dev"
+          fi
+          echo "BRANCH_TAG=$branch_name" >> $GITHUB_ENV
+          echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
 
       - name: Build and push
         uses: docker/build-push-action@v5
@@ -52,5 +52,6 @@ jobs:
           platforms: ${{env.platforms}}
           push: true
           tags: |
-            ghcr.io/${{ env.repo }}:${{ steps.latest_tag.outputs.latest_tag }}
+            ghcr.io/${{ env.repo }}:${{ env.BRANCH_TAG }}
+            ghcr.io/${{ env.repo }}:${{ env.LATEST_TAG }}
 
