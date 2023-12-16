@@ -35,12 +35,13 @@ jobs:
         run: |
           ref=${{github.ref}}
           branch_name=$(echo ${ref##*/} | sed 's/[^a-z0-9_.-]//g' | cut -c 1-128)
-          echo $branch_name
           if [[ $branch_name == "main" ]]; then
             latest_tag="latest"
           else
             latest_tag="dev"
           fi
+          echo $branch_name
+          echo $latest_tag
           echo "BRANCH_TAG=$branch_name" >> $GITHUB_ENV
           echo "LATEST_TAG=$latest_tag" >> $GITHUB_ENV
 
