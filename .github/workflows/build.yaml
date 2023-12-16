@@ -38,7 +38,7 @@ jobs:
           echo ::set-output name=latest_tag::$([[ ! -z "$tag_name" ]] && echo "latest" || echo "dev")
 
       - name: print ref
-        run: echo "{{github.ref}} - {{GITHUB_EVENT_PATH}}"
+        run: echo "${{github.ref}} - ${{GITHUB_EVENT_PATH}}"
 
       - name: Build and push
         uses: docker/build-push-action@v5
