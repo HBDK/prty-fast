@@ -70,8 +70,8 @@ async def send_notification(template_name, data):
     transformed_message = template.render(message=data)
     json_message = json.loads(transformed_message)
 
-    body = json_message.get("body")
-    headers = {key: value for key, value in json_message.items() if key != "body"}
+    body = json_message.get("body").strip()
+    headers = {key.replace('\n', ''): value.replace('\n', '') for key, value in json_message.items() if key != "body"}
 
     # Log the request details
     logger.info(f"Sending request to {NTFY_ADDRESS}/{template_name}")
