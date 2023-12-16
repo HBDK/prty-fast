@@ -37,6 +37,9 @@ jobs:
           tag_name=$(cat $GITHUB_EVENT_PATH | grep tag_name | sed -E 's/.*"([^"]+)".*/\1/')
           echo ::set-output name=latest_tag::$([[ ! -z "$tag_name" ]] && echo "latest" || echo "dev")
 
+      - name: print ref
+        run: echo "{{github.ref}} - {{GITHUB_EVENT_PATH}}"
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
